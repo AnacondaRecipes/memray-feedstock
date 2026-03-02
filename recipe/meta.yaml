@@ -7,7 +7,7 @@ package:
 
 source:
   url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: cc3b114d24828edaafc31bc19effb90530e7df38e37f100a0f6f03a2584976d4
+  sha256: 7fcf306eae2c00144920b01913f42fa7f235af7a80fa3226ab124672a5cb1d8f
 
 build:
   number: 0
@@ -22,19 +22,22 @@ requirements:
     - {{ stdlib("c") }}
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
-    - cython
     - make
   host:
     - python
     - pip
     - setuptools
-    - libunwind {{ libunwind }}  # [linux64]
+    - wheel
+    - pkgconfig
+    - cython >=0.29.31
+    - libunwind {{ libunwind }}  # [linux]
     - lz4-c {{ lz4_c }}
   run:
     - python
+    - jinja2 >= 2.9
+    - typing_extensions  # [py<38]
     - rich >=11.2.0
-    - jinja2
-    - textual >=0.34.0
+    - textual >=0.41.0
     # Version through run_exports
     - libunwind
 
