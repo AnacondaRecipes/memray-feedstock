@@ -63,6 +63,7 @@ about:
   license_file:
     - LICENSE
     - src/vendor/libbacktrace/LICENSE
+  license_family: Other
   doc_url: https://bloomberg.github.io/memray
   dev_url: https://github.com/bloomberg/memray
 
