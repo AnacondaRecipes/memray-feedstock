@@ -1,0 +1,24 @@
+--- a/setup.py
++++ b/setup.py
+@@ -225,10 +225,21 @@ try:
+         " ".join(f"lib{libname}" for libname in library_flags["libraries"])
+     )
+ except EnvironmentError as e:
+     print("pkg-config not found.", e)
+     print("Falling back to static flags.")
+ except pkgconfig.PackageNotFoundError as e:
+     print("Package Not Found", e)
+     print("Falling back to static flags.")
++    # When libdebuginfod is not available (e.g. not in conda), retry without it
++    if IS_LINUX and "debuginfod" in library_flags.get("libraries", []):
++        library_flags["libraries"].remove("debuginfod")
++        try:
++            library_flags = pkgconfig.parse(
++                " ".join(f"lib{libname}" for libname in library_flags["libraries"])
++            )
++        except (EnvironmentError, pkgconfig.PackageNotFoundError):
++            library_flags = {"libraries": ["lz4", "unwind"]}
++    else:
++        library_flags = {"libraries": ["lz4", "unwind"]} if IS_LINUX else {"libraries": ["lz4"]}
+ 
+ MEMRAY_EXTENSION = Extension(
