@@ -8,8 +8,6 @@ package:
 source:
   url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
   sha256: 7fcf306eae2c00144920b01913f42fa7f235af7a80fa3226ab124672a5cb1d8f
-  patches:
-    - skip-debuginfod-when-missing.patch  # [linux]
 
 build:
   number: 0
