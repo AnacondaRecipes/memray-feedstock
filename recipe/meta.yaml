@@ -1,41 +1,47 @@
 {% set name = "memray" %}
-{% set version = "1.7.0" %}
+{% set version = "1.19.1" %}
 
 package:
   name: {{ name|lower }}
   version: {{ version }}
 
 source:
-  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: cc3b114d24828edaafc31bc19effb90530e7df38e37f100a0f6f03a2584976d4
+  url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
+  sha256: 7fcf306eae2c00144920b01913f42fa7f235af7a80fa3226ab124672a5cb1d8f
 
 build:
-  skip: true  # [win]
-  script:
-    - export CFLAGS="${CFLAGS} -pthread"  # [aarch64 or ppc64le]
-    - {{ PYTHON }} -m pip install . -vv
   number: 0
+  script:
+    - export CFLAGS="${CFLAGS} -pthread"  # [aarch64]
+    - export LDFLAGS="${LDFLAGS} -pthread"  # [aarch64]
+    - {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
+  skip: true  # [win]
 
 requirements:
   build:
+    - {{ stdlib("c") }}
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
-    - python                                 # [build_platform != target_platform]
-    - cross-python_{{ target_platform }}     # [build_platform != target_platform]
-    - cython                                 # [build_platform != target_platform]
     - make
-    - sysroot_linux-64 2.17  # [linux64]
   host:
     - python
     - pip
-    - libunwind  # [linux]
-    - cython
-    - lz4-c
+    - setuptools
+    - wheel
+    - pkgconfig
+    - cython >=0.29.31
+    - libunwind {{ libunwind }}  # [linux]
+    - elfutils {{ elfutils }}  # [linux]
+    - lz4-c {{ lz4_c }}
   run:
     - python
-    - rich
-    - jinja2
-    - typing-extensions  # [py<38]
+    - jinja2 >=2.9
+    - typing_extensions  # [py<38]
+    - rich >=11.2.0
+    - textual >=0.41.0
+    # Version through run_exports
+    - libunwind  # [linux]
+    - elfutils  # [linux]
 
 test:
   imports:
@@ -60,7 +66,8 @@ about:
   license_file:
     - LICENSE
     - src/vendor/libbacktrace/LICENSE
-  doc_url: https://bloomberg.github.io/memray/
+  license_family: Other
+  doc_url: https://bloomberg.github.io/memray
   dev_url: https://github.com/bloomberg/memray
 
 extra:
