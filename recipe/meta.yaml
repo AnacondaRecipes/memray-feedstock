@@ -11,7 +11,10 @@ source:
 
 build:
   number: 0
-  script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
+  script:
+    - export CFLAGS="${CFLAGS} -pthread"  # [aarch64]
+    - export LDFLAGS="${LDFLAGS} -pthread"  # [aarch64]
+    - {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
   skip: true  # [win]
 
 requirements:
