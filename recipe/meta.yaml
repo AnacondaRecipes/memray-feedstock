@@ -1,13 +1,13 @@
 {% set name = "memray" %}
-{% set version = "1.19.1" %}
+{% set version = "1.19.3" %}
 
 package:
-  name: {{ name|lower }}
+  name: {{ name }}
   version: {{ version }}
 
 source:
   url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: 7fcf306eae2c00144920b01913f42fa7f235af7a80fa3226ab124672a5cb1d8f
+  sha256: 4e0fb29ff0a50c0ec9dc84294d8f2c83419feba561a37628b304c2ae4fe73d03
 
 build:
   number: 0
@@ -73,3 +73,7 @@ about:
 extra:
   recipe-maintainers:
     - matthiasdiener
+  skip-lints:
+    # elfutils is exactly pinned through the global
+    # conda_build_config.yaml, which the linter does not resolve here.
+    - host_section_needs_exact_pinnings
