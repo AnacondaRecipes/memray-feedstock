@@ -2,7 +2,7 @@
 {% set version = "1.19.3" %}
 
 package:
-  name: {{ name|lower }}
+  name: {{ name }}
   version: {{ version }}
 
 source:
@@ -73,3 +73,7 @@ about:
 extra:
   recipe-maintainers:
     - matthiasdiener
+  skip-lints:
+    # elfutils is exactly pinned through the global
+    # conda_build_config.yaml, which the linter does not resolve here.
+    - host_section_needs_exact_pinnings
